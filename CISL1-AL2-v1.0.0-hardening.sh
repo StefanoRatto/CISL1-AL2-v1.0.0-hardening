@@ -3,10 +3,10 @@
 ###########################################################################
 # Script Name: 	CISL1-AL2-v1.0.0-hardening.sh
 # Description: 	Hardening script for AL2 and CIS Level 1 benchmarks v1.0.0
-# Args: 		none
-# Author: 		Stefano Ratto
-# Email: 		stefano.ratto@gmail.com
-# GitHub: 		github.com/StefanoRatto
+# Args: 	none
+# Author: 	Stefano Ratto
+# Email: 	stefano.ratto@gmail.com
+# GitHub: 	github.com/StefanoRatto
 ###########################################################################
 
 #### Formatted output
