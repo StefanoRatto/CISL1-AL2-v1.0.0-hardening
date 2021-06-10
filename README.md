@@ -8,14 +8,13 @@ More information about CIS and CIS standards can be accessed at [CIS Center for 
 
 ## General information
 
-The script is going 1-by-1 through the 176 CIS Level 1 benchmarks for Amazon Linux 2 platform (a copy of the specs is included in the repo as PDF) and for each benchmark:
-* Audits the configuration and:
-  - If the configuration already satisfies the benchmark requirements, it marks the benchmark as a "Pass" and moves onto the next benchmark.
-  - If the configuration does not satisfy the benchmark requirements:
-     ^ It performs the required corrective actions/configuration changes (using its root privileges).
-     ^ Then it audits again the configuration requirements and:
-      ~ It confirms that the benchmark is now a Pass.
-      ~ It finds out that the benchmark requirements are still not met and shows a FAIL.
+The script is going 1-by-1 through the 176 CIS Level 1 benchmarks for Amazon Linux 2 platform (a copy of the specs is included in the repo as PDF) and for each benchmark it audits the configuration and:
+* If the configuration already satisfies the benchmark requirements, it marks the benchmark as a "Pass" and moves onto the next benchmark.
+* If the configuration does not satisfy the benchmark requirements:
+  - It performs the required corrective actions/configuration changes (using its root privileges).
+  - Then it audits again the configuration requirements and:
+    1. It confirms that the benchmark is now a Pass.
+    2. It finds out that the benchmark requirements are still not met and shows a FAIL.
 
 ## Requirements
 
