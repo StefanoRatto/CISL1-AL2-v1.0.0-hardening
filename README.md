@@ -34,7 +34,7 @@ export CIS_HARDENING_HOME=$(pwd)
 
 ```Bash
 cd $CIS_HARDENING_HOME
-sudo ./CISL1-AL2-v1.0.0-hardening
+sudo ./CISL1-AL2-v1.0.0-hardening.sh
 ```
 
 ## Licensing
