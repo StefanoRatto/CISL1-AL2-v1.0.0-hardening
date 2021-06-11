@@ -1,5 +1,3 @@
-![CISL1-AL2-v1.0.0-hardening_logo](./images/CISL1-AL2-v1.0.0-hardening.png)
-
 # CISL1-AL2-v1.0.0-hardening
 
 A Bash script that tests and implements CIS Level 1 hardening benchmarks for Amazon Linux 2 based hosts.
