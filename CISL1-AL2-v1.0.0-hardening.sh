@@ -1658,7 +1658,7 @@ actual=$(cat /etc/ssh/sshd_config | grep Protocol)
 expected="Protocol 2"
 if [[ "$actual" != "$expected" ]]; then
 	echo "Protocol 2" >> /etc/ssh/sshd_config
-	systemctl restart sshd
+	systemctl restart sshd > /dev/null 2>&1
 	actual=$(cat /etc/ssh/sshd_config | grep Protocol)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1686,7 +1686,7 @@ actual=$(sshd -T | grep maxauthtries)
 expected="maxauthtries 4"
 if [[ "$actual" != "$expected" ]]; then
 	sed -i -e 's/#MaxAuthTries 6/MaxAuthTries 4/g' /etc/ssh/sshd_config
-	systemctl restart sshd
+	systemctl restart sshd > /dev/null 2>&1
 	actual=$(sshd -T | grep maxauthtries)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1702,7 +1702,7 @@ actual=$(sshd -T | grep ignorerhosts)
 expected="ignorerhosts yes"
 if [[ "$actual" != "$expected" ]]; then
 	sed -i -e 's/#IgnoreRhosts no/IgnoreRhosts yes/g' /etc/ssh/sshd_config
-	systemctl restart sshd
+	systemctl restart sshd > /dev/null 2>&1
 	actual=$(sshd -T | grep ignorerhosts)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1718,7 +1718,7 @@ actual=$(sshd -T | grep hostbasedauthentication)
 expected="hostbasedauthentication no"
 if [[ "$actual" != "$expected" ]]; then
     sed -i -e 's/HostbasedAuthentication yes/HostbasedAuthentication no/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep hostbasedauthentication)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1734,7 +1734,7 @@ actual=$(sshd -T | grep permitrootlogin)
 expected="permitrootlogin no"
 if [[ "$actual" != "$expected" ]]; then
     sed -i -e 's/#PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep permitrootlogin)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1750,7 +1750,7 @@ actual=$(sshd -T | grep permitemptypasswords)
 expected="permitemptypasswords no"
 if [[ "$actual" != "$expected" ]]; then
     sed -i -e 's/PermitEmptyPasswords yes/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep permitemptypasswords)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1766,7 +1766,7 @@ actual=$(sshd -T | grep permituserenvironment)
 expected="permituserenvironment no"
 if [[ "$actual" != "$expected" ]]; then
     sed -i -e 's/PermitUserEnvironment yes/PermitUserEnvironment no/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep permituserenvironment)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1782,7 +1782,7 @@ actual=$(sshd -T | grep ciphers)
 expected="ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
 if [[ "$actual" != "$expected" ]]; then
     echo "Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr" >> /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep ciphers)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1798,7 +1798,7 @@ actual=$(sshd -T | grep -i "MACs")
 expected="macs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
 if [[ "$actual" != "$expected" ]]; then
     echo "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256" >> /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep -i "MACs")
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1814,7 +1814,7 @@ actual=$(sshd -T | grep -w kexalgorithms)
 expected="kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
 if [[ "$actual" != "$expected" ]]; then
     echo "KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256" >> /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep -w kexalgorithms)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1830,14 +1830,14 @@ actual1=$(sshd -T | grep clientaliveinterval)
 expected1="clientaliveinterval 300"
 if [[ "$actual1" != "$expected1" ]]; then
     sed -i -e 's/#ClientAliveInterval 0/ClientAliveInterval 300/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual1=$(sshd -T | grep clientaliveinterval)
 fi
 actual2=$(sshd -T | grep clientalivecountmax)
 expected2="clientalivecountmax 0"
 if [[ "$actual2" != "$expected2" ]]; then
     sed -i -e 's/#ClientAliveCountMax 3/ClientAliveCountMax 0/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual2=$(sshd -T | grep clientalivecountmax)
 fi
 if [[ "$actual1" == "$expected1" ]] && [[ "$actual2" == "$expected2" ]]; then
@@ -1853,7 +1853,7 @@ actual=$(sshd -T | grep logingracetime)
 expected="logingracetime 60"
 if [[ "$actual" != "$expected" ]]; then
     sed -i -e 's/#LoginGraceTime 2m/LoginGraceTime 1m/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep logingracetime)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1869,28 +1869,28 @@ actual1=$(sshd -T | grep allowusers)
 expected1=""
 if [[ "$actual1" != "$expected1" ]]; then
     echo "#AllowUsers <userlist>" >> /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual1=$(sshd -T | grep allowusers)
 fi
 actual2=$(sshd -T | grep allowgroups)
 expected2=""
 if [[ "$actual2" != "$expected2" ]]; then
     echo "#AllowGroups <grouplist>" >> /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual2=$(sshd -T | grep allowgroups)
 fi
 actual3=$(sshd -T | grep denyusers)
 expected3=""
 if [[ "$actual3" != "$expected3" ]]; then
     echo "#DenyUsers <userlist>" >> /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual3=$(sshd -T | grep denyusers)
 fi
 actual4=$(sshd -T | grep denygroups)
 expected4=""
 if [[ "$actual4" != "$expected4" ]]; then
     echo "#DenyGroups <grouplist>" >> /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual4=$(sshd -T | grep denygroups)
 fi
 if [[ "$actual1" == "$expected1" ]] && [[ "$actual2" == "$expected2" ]] && [[ "$actual3" == "$expected3" ]] && [[ "$actual4" == "$expected4" ]]; then
@@ -1906,7 +1906,7 @@ actual=$(sshd -T | grep banner)
 expected="banner /etc/issue.net"
 if [[ "$actual" != "$expected" ]]; then
     sed -i -e 's/#Banner none/Banner \/etc\/issue.net/g' /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual=$(sshd -T | grep banner)
 fi
 if [[ "$actual" == "$expected" ]]; then
@@ -1922,7 +1922,7 @@ actual1=$(grep pam_pwquality.so /etc/pam.d/password-auth | xargs)
 expected1="password requisite pam_pwquality.so try_first_pass retry=3"
 if [[ "$actual1" != "$expected1" ]]; then
     sed -i -e 's/password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=/password    requisite     pam_pwquality.so try_first_pass retry=3/g' /etc/pam.d/password-auth
-    systemctl restart sshd
+    systemctl restart sshd > /dev/null 2>&1
     actual1=$(grep pam_pwquality.so /etc/pam.d/password-auth | xargs)
 fi
 actual2=$(grep pam_pwquality.so /etc/pam.d/system-auth | xargs)
