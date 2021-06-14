@@ -38,3 +38,8 @@ sudo ./CISL1-AL2-v1.0.0-hardening.sh
 ## Licensing
 
 The tool is licensed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+## TODOs
+
+- A note on code width: in some case lines were left longer than 80 characters due to constraints in some text manipulation operations. This will be tried to fix in the future.
+- Benchmarks already met by vanilla Amazon Linux 2 configuration will be implemented as best efffort.
