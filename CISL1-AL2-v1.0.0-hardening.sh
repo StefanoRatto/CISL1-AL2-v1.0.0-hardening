@@ -1654,92 +1654,360 @@ echo $NIMP
 #### CIS Level 1 - Benchmark 116/176: 5.2.4 Ensure SSH Protocol is set to 2 (Scored)
 echo "|"
 echo "| L1 116/176: 5.2.4 Ensure SSH Protocol is set to 2 (Scored)"
-echo $NIMP
+actual=$(cat /etc/ssh/sshd_config | grep Protocol)
+expected="Protocol 2"
+if [[ "$actual" != "$expected" ]]; then
+	echo "Protocol 2" >> /etc/ssh/sshd_config
+	systemctl restart sshd
+	actual=$(cat /etc/ssh/sshd_config | grep Protocol)
+fi
+if [[ "$actual" == "$expected" ]]; then
+	echo $OK
+else
+	echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 117/176: 5.2.5 Ensure SSH LogLevel is appropriate (Scored)
 echo "|"
 echo "| L1 117/176: 5.2.5 Ensure SSH LogLevel is appropriate (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep loglevel)
+expecteda="loglevel INFO"
+expectedb="loglevel VERBOSE"
+if [[ "$actual" == "$expecteda" ]] || [[ "$actual" == "$expectedb" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 118/176: 5.2.7 Ensure SSH MaxAuthTries is set to 4 or less (Scored)
 echo "|"
 echo "| L1 118/176: 5.2.7 Ensure SSH MaxAuthTries is set to 4 or less (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep maxauthtries)
+expected="maxauthtries 4"
+if [[ "$actual" != "$expected" ]]; then
+	sed -i -e 's/#MaxAuthTries 6/MaxAuthTries 4/g' /etc/ssh/sshd_config
+	systemctl restart sshd
+	actual=$(sshd -T | grep maxauthtries)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 119/176: 5.2.8 Ensure SSH IgnoreRhosts is enabled (Scored)
 echo "|"
 echo "| L1 119/176: 5.2.8 Ensure SSH IgnoreRhosts is enabled (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep ignorerhosts)
+expected="ignorerhosts yes"
+if [[ "$actual" != "$expected" ]]; then
+	sed -i -e 's/#IgnoreRhosts no/IgnoreRhosts yes/g' /etc/ssh/sshd_config
+	systemctl restart sshd
+	actual=$(sshd -T | grep ignorerhosts)
+fi
+if [[ "$actual" == "$expected" ]]; then
+	echo $OK
+else
+	echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 120/176: 5.2.9 Ensure SSH HostbasedAuthentication is disabled (Scored)
 echo "|"
 echo "| L1 120/176: 5.2.9 Ensure SSH HostbasedAuthentication is disabled (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep hostbasedauthentication)
+expected="hostbasedauthentication no"
+if [[ "$actual" != "$expected" ]]; then
+    sed -i -e 's/HostbasedAuthentication yes/HostbasedAuthentication no/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep hostbasedauthentication)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 121/176: 5.2.10 Ensure SSH root login is disabled (Scored)
 echo "|"
 echo "| L1 121/176: 5.2.10 Ensure SSH root login is disabled (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep permitrootlogin)
+expected="permitrootlogin no"
+if [[ "$actual" != "$expected" ]]; then
+    sed -i -e 's/#PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep permitrootlogin)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 122/176: 5.2.11 Ensure SSH PermitEmptyPasswords is disabled (Scored)
 echo "|"
 echo "| L1 122/176: 5.2.11 Ensure SSH PermitEmptyPasswords is disabled (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep permitemptypasswords)
+expected="permitemptypasswords no"
+if [[ "$actual" != "$expected" ]]; then
+    sed -i -e 's/PermitEmptyPasswords yes/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep permitemptypasswords)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 123/176: 5.2.12 Ensure SSH PermitUserEnvironment is disabled (Scored)
 echo "|"
 echo "| L1 123/176: 5.2.12 Ensure SSH PermitUserEnvironment is disabled (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep permituserenvironment)
+expected="permituserenvironment no"
+if [[ "$actual" != "$expected" ]]; then
+    sed -i -e 's/PermitUserEnvironment yes/PermitUserEnvironment no/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep permituserenvironment)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 124/176: 5.2.13 Ensure only strong ciphers are used (Scored)
 echo "|"
 echo "| L1 124/176: 5.2.13 Ensure only strong ciphers are used (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep ciphers)
+expected="ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
+if [[ "$actual" != "$expected" ]]; then
+    echo "Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep ciphers)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 125/176: 5.2.14 Ensure only strong MAC algorithms are used (Scored)
 echo "|"
 echo "| L1 125/176: 5.2.14 Ensure only strong MAC algorithms are used (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep -i "MACs")
+expected="macs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
+if [[ "$actual" != "$expected" ]]; then
+    echo "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep -i "MACs")
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 126/176: 5.2.15 Ensure that strong Key Exchange algorithms are used (Scored)
 echo "|"
 echo "| L1 126/176: 5.2.15 Ensure that strong Key Exchange algorithms are used (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep -w kexalgorithms)
+expected="kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+if [[ "$actual" != "$expected" ]]; then
+    echo "KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep -w kexalgorithms)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 127/176: 5.2.16 Ensure SSH Idle Timeout Interval is configured (Scored)
 echo "|"
 echo "| L1 127/176: 5.2.16 Ensure SSH Idle Timeout Interval is configured (Scored)"
-echo $NIMP
+actual1=$(sshd -T | grep clientaliveinterval)
+expected1="clientaliveinterval 300"
+if [[ "$actual1" != "$expected1" ]]; then
+    sed -i -e 's/#ClientAliveInterval 0/ClientAliveInterval 300/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual1=$(sshd -T | grep clientaliveinterval)
+fi
+actual2=$(sshd -T | grep clientalivecountmax)
+expected2="clientalivecountmax 0"
+if [[ "$actual2" != "$expected2" ]]; then
+    sed -i -e 's/#ClientAliveCountMax 3/ClientAliveCountMax 0/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual2=$(sshd -T | grep clientalivecountmax)
+fi
+if [[ "$actual1" == "$expected1" ]] && [[ "$actual2" == "$expected2" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 128/176: 5.2.17 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
 echo "|"
 echo "| L1 128/176: 5.2.17 Ensure SSH LoginGraceTime is set to one minute or less (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep logingracetime)
+expected="logingracetime 60"
+if [[ "$actual" != "$expected" ]]; then
+    sed -i -e 's/#LoginGraceTime 2m/LoginGraceTime 1m/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep logingracetime)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 129/176: 5.2.18 Ensure SSH access is limited (Scored)
 echo "|"
 echo "| L1 129/176: 5.2.18 Ensure SSH access is limited (Scored)"
-echo $NIMP
+actual1=$(sshd -T | grep allowusers)
+expected1=""
+if [[ "$actual1" != "$expected1" ]]; then
+    echo "#AllowUsers <userlist>" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual1=$(sshd -T | grep allowusers)
+fi
+actual2=$(sshd -T | grep allowgroups)
+expected2=""
+if [[ "$actual2" != "$expected2" ]]; then
+    echo "#AllowGroups <grouplist>" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual2=$(sshd -T | grep allowgroups)
+fi
+actual3=$(sshd -T | grep denyusers)
+expected3=""
+if [[ "$actual3" != "$expected3" ]]; then
+    echo "#DenyUsers <userlist>" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual3=$(sshd -T | grep denyusers)
+fi
+actual4=$(sshd -T | grep denygroups)
+expected4=""
+if [[ "$actual4" != "$expected4" ]]; then
+    echo "#DenyGroups <grouplist>" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual4=$(sshd -T | grep denygroups)
+fi
+if [[ "$actual1" == "$expected1" ]] && [[ "$actual2" == "$expected2" ]] && [[ "$actual3" == "$expected3" ]] && [[ "$actual4" == "$expected4" ]]; then
+    echo $NE
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 130/176: 5.2.19 Ensure SSH warning banner is configured (Scored)
 echo "|"
 echo "| L1 130/176: 5.2.19 Ensure SSH warning banner is configured (Scored)"
-echo $NIMP
+actual=$(sshd -T | grep banner)
+expected="banner /etc/issue.net"
+if [[ "$actual" != "$expected" ]]; then
+    sed -i -e 's/#Banner none/Banner \/etc\/issue.net/g' /etc/ssh/sshd_config
+    systemctl restart sshd
+    actual=$(sshd -T | grep banner)
+fi
+if [[ "$actual" == "$expected" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 131/176: 5.3.1 Ensure password creation requirements are configured (Scored)
 echo "|"
 echo "| L1 131/176: 5.3.1 Ensure password creation requirements are configured (Scored)"
-echo $NIMP
+actual1=$(grep pam_pwquality.so /etc/pam.d/password-auth | xargs)
+expected1="password requisite pam_pwquality.so try_first_pass retry=3"
+if [[ "$actual1" != "$expected1" ]]; then
+    sed -i -e 's/password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=/password    requisite     pam_pwquality.so try_first_pass retry=3/g' /etc/pam.d/password-auth
+    systemctl restart sshd
+    actual1=$(grep pam_pwquality.so /etc/pam.d/password-auth | xargs)
+fi
+actual2=$(grep pam_pwquality.so /etc/pam.d/system-auth | xargs)
+expected2="password requisite pam_pwquality.so try_first_pass retry=3"
+if [[ "$actual2" != "$expected2" ]]; then
+    sed -i -e 's/password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=/password    requisite     pam_pwquality.so try_first_pass retry=3/g' /etc/pam.d/system-auth
+    actual2=$(grep pam_pwquality.so /etc/pam.d/system-auth | xargs)
+fi
+actual3=$(grep minlen /etc/security/pwquality.conf)
+expected3="minlen = 14"
+if [[ "$actual3" != "$expected3" ]]; then
+    sed -i -e 's/# minlen = 9/minlen = 14/g' /etc/security/pwquality.conf
+    actual3=$(sshd -T | grep clientaliveinterval)
+fi
+actual4=$(grep dcredit /etc/security/pwquality.conf)
+expected4="dcredit = -1"
+if [[ "$actual4" != "$expected4" ]]; then
+    sed -i -e 's/# dcredit = 1/dcredit = -1/g' /etc/security/pwquality.conf
+    actual4=$(grep dcredit /etc/security/pwquality.conf)
+fi
+actual5=$(grep lcredit /etc/security/pwquality.conf)
+expected5="lcredit = -1"
+if [[ "$actual5" != "$expected5" ]]; then
+    sed -i -e 's/# lcredit = 1/lcredit = -1/g' /etc/security/pwquality.conf
+    actual5=$(grep lcredit /etc/security/pwquality.conf)
+fi
+actual6=$(grep ocredit /etc/security/pwquality.conf)
+expected6="ocredit = -1"
+if [[ "$actual6" != "$expected6" ]]; then
+    sed -i -e 's/# ocredit = 1/ocredit = -1/g' /etc/security/pwquality.conf
+    actual6=$(grep ocredit /etc/security/pwquality.conf)
+fi
+actual7=$(grep ucredit /etc/security/pwquality.conf)
+expected7="ucredit = -1"
+if [[ "$actual7" != "$expected7" ]]; then
+    sed -i -e 's/# ucredit = 1/ucredit = -1/g' /etc/security/pwquality.conf
+    actual7=$(grep ucredit /etc/security/pwquality.conf)
+fi
+if [[ "$actual1" == "$expected1" ]] && [[ "$actual2" == "$expected2" ]] && [[ "$actual3" == "$expected3" ]] && [[ "$actual4" == "$expected4" ]] && [[ "$actual5" == "$expected5" ]] && [[ "$actual6" == "$expected6" ]] && [[ "$actual7" == "$expected7" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 132/176: 5.3.2 Ensure lockout for failed password attempts is configured (Scored)
 echo "|"
 echo "| L1 132/176: 5.3.2 Ensure lockout for failed password attempts is configured (Scored)"
-echo $NIMP
+actual1=$(grep -w auth /etc/pam.d/password-auth | tr '\n' ' ')
+expected1="auth        required      pam_env.so auth        required      pam_faillock.so preauth audit silent deny=5 unlock_time=900 auth        [success=1 default=bad]      pam_unix.so auth        [default=die]      pam_faillock.so authfail audit deny=5 unlock_time=900 auth        sufficient      pam_faillock.so authsucc audit deny=5 unlock_time=900 auth        required      pam_deny.so "
+if [[ "$actual1" != "$expected1" ]]; then
+    sed -i -e 's/auth        sufficient    pam_unix.so try_first_pass nullok/auth        required      pam_faillock.so preauth audit silent deny=5 unlock_time=900\nauth        [success=1 default=bad]      pam_unix.so\nauth        [default=die]      pam_faillock.so authfail audit deny=5 unlock_time=900\nauth        sufficient      pam_faillock.so authsucc audit deny=5 unlock_time=900/g'  /etc/pam.d/password-auth
+    actual1=$(grep -w auth /etc/pam.d/password-auth | tr '\n' ' ')
+fi
+actual2=$(grep -w auth /etc/pam.d/system-auth | tr '\n' ' ')
+expected2="auth        required      pam_env.so auth        required      pam_faillock.so preauth audit silent deny=5 unlock_time=900 auth        [success=1 default=bad]      pam_unix.so auth        [default=die]      pam_faillock.so authfail audit deny=5 unlock_time=900 auth        sufficient      pam_faillock.so authsucc audit deny=5 unlock_time=900 auth        required      pam_deny.so "
+if [[ "$actual2" != "$expected2" ]]; then
+    sed -i -e 's/auth        sufficient    pam_unix.so try_first_pass nullok/auth        required      pam_faillock.so preauth audit silent deny=5 unlock_time=900\nauth        [success=1 default=bad]      pam_unix.so\nauth        [default=die]      pam_faillock.so authfail audit deny=5 unlock_time=900\nauth        sufficient      pam_faillock.so authsucc audit deny=5 unlock_time=900/g' /etc/pam.d/system-auth
+    actual2=$(grep -w auth /etc/pam.d/system-auth | tr '\n' ' ')
+fi
+if [[ "$actual1" == "$expected1" ]] && [[ "$actual2" == "$expected2" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 133/176: 5.3.3 Ensure password reuse is limited (Scored)
 echo "|"
 echo "| L1 133/176: 5.3.3 Ensure password reuse is limited (Scored)"
-echo $NIMP
+actual1=$(grep 'remember=5' /etc/pam.d/password-auth | tr '\n' ' ')
+expected1="password    sufficient    pam_unix.so try_first_pass use_authtok nullok sha512 shadow remember=5 password    required      pam_pwhistory.so remember=5 "
+if [[ "$actual1" != "$expected1" ]]; then
+    sed -i -e 's/password    sufficient    pam_unix.so try_first_pass use_authtok nullok sha512 shadow/password    sufficient    pam_unix.so try_first_pass use_authtok nullok sha512 shadow remember=5\npassword    required      pam_pwhistory.so remember=5/g'  /etc/pam.d/password-auth
+    actual1=$(grep 'remember=5' /etc/pam.d/password-auth | tr '\n' ' ')
+fi
+actual2=$(grep 'remember=5' /etc/pam.d/system-auth | tr '\n' ' ')
+expected2="password    sufficient    pam_unix.so try_first_pass use_authtok nullok sha512 shadow remember=5 password    required      pam_pwhistory.so remember=5 "
+if [[ "$actual2" != "$expected2" ]]; then
+    sed -i -e 's/password    sufficient    pam_unix.so try_first_pass use_authtok nullok sha512 shadow/password    sufficient    pam_unix.so try_first_pass use_authtok nullok sha512 shadow remember=5\npassword    required      pam_pwhistory.so remember=5/g' /etc/pam.d/system-auth
+    actual2=$(grep 'remember=5' /etc/pam.d/system-auth | tr '\n' ' ')
+fi
+if [[ "$actual1" == "$expected1" ]] && [[ "$actual2" == "$expected2" ]]; then
+    echo $OK
+else
+    echo $NOK
+fi
 
 #### CIS Level 1 - Benchmark 134/176: 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
 echo "|"
